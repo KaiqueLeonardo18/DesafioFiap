@@ -64,12 +64,12 @@ namespace Web.Services
             var result = await _httpClient.PostAsync($"{_apiUrl}{uri}", content);
             if (!result.IsSuccessStatusCode)
             {
-                var exception = JsonSerializer.Deserialize<ErrorDetails>(await result.Content.ReadAsStringAsync(), new JsonSerializerOptions
+                var errorContent = await result.Content.ReadAsStringAsync();
+                var exception = JsonSerializer.Deserialize<ErrorDetails>(errorContent, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-                return null;
             }
 
             return await FromHttpResponseMessage<T>(result);

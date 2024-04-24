@@ -1,14 +1,23 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Web
 {
     public class ErrorDetails
     {
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
-        public override string ToString()
+        [JsonPropertyName("error")]
+        public ErrorInfo Error { get; set; }
+
+        public class ErrorInfo
         {
-            return JsonSerializer.Serialize(this);
+            [JsonPropertyName("message")]
+            public string Message { get; set; }
+
+            [JsonPropertyName("code")]
+            public int Code { get; set; }
+
+            [JsonPropertyName("details")]
+            public string Details { get; set; }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.Turmas.Create;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using MediatR;
 using System;
@@ -25,6 +26,11 @@ namespace Application.UseCases.Turmas.Create
         public async Task<CreateTurmaResponse> Handle(CreateTurmaRequest request, CancellationToken cancellationToken)
         {
             var turma = _mapper.Map<Turma>(request);
+
+            if(await _TurmaRepository.VerificarSeExisteTurmaComMesmoNome(request.nome))
+            {
+                throw new TurmaExcepetion("Já existe uma turma com este nome");
+            }
 
             _TurmaRepository.Create(turma);
 

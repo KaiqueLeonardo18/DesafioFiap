@@ -4,6 +4,7 @@ using Application.UseCases.Turmas.Update;
 using Application.UseCases.Turmas.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Domain.Exceptions;
 
 namespace WebApi.Controllers
 {
@@ -18,10 +19,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateTurmaResponse>> Create(CreateTurmaRequest request, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(request, cancellationToken);
-            return Ok(response);
+            try
+            {
+                var response = await _mediator.Send(request, cancellationToken);
+                return Ok(response);
+            }
+            catch (TurmaExcepetion ex)
+            {
+                return StatusCode(500, new { error = new { message = "Erro interno no servidor", code = 500, details = ex.Message } });
+            }
         }
 
         [HttpGet]

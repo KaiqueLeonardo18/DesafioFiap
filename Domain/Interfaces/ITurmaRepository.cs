@@ -9,5 +9,6 @@ namespace Domain.Interfaces
 {
     public interface ITurmaRepository : IBaseRepository<Turma>
     {
+        Task<bool> VerificarSeExisteTurmaComMesmoNome(string nome);
     }
 }
