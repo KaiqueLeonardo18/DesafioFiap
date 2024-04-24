@@ -1,0 +1,67 @@
+﻿@page "/alunoTurma/create"
+@using Domain.Entities
+@using Web.Services
+@inject NavigationManager NavigationManager
+@inject HttpService _httpService
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+
+@if (listAlunos == null && listTurmas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <label for="nome" class="form-label">Aluno:</label>
+            <select class="form-select" aria-label="Default select example" @bind="@alunoSelecionado">
+                <option selected>Open this select menu</option>
+                @foreach (var livro in listAlunos)
+                {
+                    <option value="@livro.Id">@livro.Nome - @livro.Usuario</option>
+                }
+            </select>
+            <label for="nome" class="form-label">Turma:</label>
+            <select class="form-select" aria-label="Default select example" @bind="@turmaSelecionado">
+                <option selected>Open this select menu</option>
+                @foreach (var livro in listTurmas)
+                {
+                    <option value="@livro.Id">@livro.Nome - @livro.Ano</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary" @onclick="() => AddAlunoTurma()">Salvar</button>
+        </div>
+    </div>
+
+    <div>
+        <a href="/alunos">Back to List</a>
+    </div>
+}
+@code {
+
+    private IEnumerable<Domain.Entities.Aluno>? listAlunos;
+    private IEnumerable<Domain.Entities.Turma>? listTurmas;
+
+    private int alunoSelecionado;
+    private int turmaSelecionado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listTurmas = await _httpService.HttpGet<List<Domain.Entities.Turma>>("api/Turma");
+        listAlunos = await _httpService.HttpGet<List<Domain.Entities.Aluno>>("api/Aluno");
+    }
+
+    public async Task AddAlunoTurma()
+    {
+        var alunoTurma = new AlunoTurma()
+        {
+            AlunoId = alunoSelecionado,
+            TurmaId = turmaSelecionado
+        };
+        await _httpService.HttpPost<Domain.Entities.AlunoTurma>($"api/AlunoTurma", alunoTurma);
+
+        NavigationManager.NavigateTo("/listAlunoTurma");
+    }
+}

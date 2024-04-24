@@ -1,0 +1,66 @@
+﻿@page "/turmas/edit"
+@using Domain.Entities
+@inject NavigationManager NavigationManager
+@using Web.Services
+@inject HttpService _httpService
+@rendermode InteractiveServer
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Turma</h4>
+<hr />
+@if (turma is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm method="post" Model="@turma" FormName="edit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <input type="hidden" name="turma.Id" value="@turma.Id" />
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <InputText id="nome" @bind-Value="turma.Nome" class="form-control" />
+            <ValidationMessage For="() => turma.Nome" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="ano" class="form-label">Ano:</label>
+            <InputNumber id="ano" @bind-Value="turma.Ano" class="form-control" />
+            <ValidationMessage For="() => turma.Ano" class="text-danger" />
+        </div>
+    </EditForm>
+    <button type="button" class="btn btn-primary" @onclick="UpdateTurma">Salvar</button>
+}
+
+<div>
+    <a href="/listTurma">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Domain.Entities.Turma? turma { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        turma = await _httpService.HttpGet<Domain.Entities.Turma>($"api/Turma/{Id}");
+
+        if (turma is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task UpdateTurma()
+    {
+        await _httpService.HttpPut<Domain.Entities.Turma>($"api/Turma", Id, turma);
+
+        NavigationManager.NavigateTo("/listTurma", true);
+
+    }
+}

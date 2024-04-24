@@ -1,0 +1,69 @@
+﻿@page "/listAlunoTurma"
+@using Web.Services
+@inject HttpService _httpService
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Listagem de Vinculos Alunos e Turmas</PageTitle>
+
+@if (listAlunosTurmas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <h2>Vinculos de Alunos e Turmas</h2>
+        <div class="text-right mb-2">
+            <button class="btn btn-primary" @onclick="() => CriarVinculoAlunoTurma()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Adicionar Vinculo
+            </button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome do Aluno</th>
+                    <th>Usuário do Aluno</th>
+                    <th>Turma</th>
+                    <th>Ano da Turma</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var alunoTurma in listAlunosTurmas)
+                {
+                    <tr>
+                        <td>@alunoTurma.NomeAluno</td>
+                        <td>@alunoTurma.UsuarioAluno</td>
+                        <td>@alunoTurma.NomeTurma</td>
+                        <td>@alunoTurma.AnoTurma</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => EditarVinculoAlunoTurma(alunoTurma.AlunoId, alunoTurma.TurmaId)">Editar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+
+    private IEnumerable<Domain.Entities.AlunoTurmaInfo>? listAlunosTurmas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listAlunosTurmas = await _httpService.HttpGet<List<Domain.Entities.AlunoTurmaInfo>>("api/AlunoTurma");
+    }
+
+    private void EditarVinculoAlunoTurma(int turma, int aluno)
+    {
+        NavigationManager.NavigateTo($"/alunoTurma/edit/{aluno}/{turma}");
+    }
+
+    private void CriarVinculoAlunoTurma()
+    {
+        NavigationManager.NavigateTo($"/alunoTurma/create");
+    }
+}

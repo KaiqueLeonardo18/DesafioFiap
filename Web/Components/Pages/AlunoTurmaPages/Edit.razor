@@ -1,0 +1,82 @@
+﻿@page "/alunoTurma/edit/{alunoId}/{turmaId}"
+@using Domain.Entities
+@inject NavigationManager NavigationManager
+@using Web.Services
+@inject HttpService _httpService
+@rendermode InteractiveServer
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<hr />
+@if (listAlunos is null || listTurmas is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <label for="nome" class="form-label">Aluno:</label>
+            <select class="form-select" aria-label="Default select example" @bind="@alunoSelecionado">
+                <option selected>Open this select menu</option>
+                @foreach (var aluno in listAlunos)
+                {
+                    <option value="@aluno.Id">@aluno.Nome - @aluno.Usuario</option>
+                }
+            </select>
+            <label for="nome" class="form-label">Turma:</label>
+            <select class="form-select" aria-label="Default select example" @bind="@turmaSelecionado">
+                <option selected>Open this select menu</option>
+                @foreach (var turma in listTurmas)
+                {
+                    <option value="@turma.Id">@turma.Nome - @turma.Ano</option>
+                }
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div>
+        <button type="button" class="btn btn-primary" @onclick="UpdateAlunoTurma">Salvar</button>
+    </div>
+}
+<div>
+    <a href="/alunos">Back to List</a>
+</div>
+
+@code {
+    private IEnumerable<Domain.Entities.Aluno>? listAlunos;
+    private IEnumerable<Domain.Entities.Turma>? listTurmas;
+
+    private int alunoSelecionado;
+    private int turmaSelecionado;
+
+    [Parameter]
+    public string alunoId { get; set; }
+
+    [Parameter]
+    public string turmaId { get; set; }
+
+    private Domain.Entities.AlunoTurmaUpdate? alunoTurma = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        alunoSelecionado = Convert.ToInt32(alunoId);
+        turmaSelecionado = Convert.ToInt32(turmaId);
+
+        listTurmas = await _httpService.HttpGet<List<Domain.Entities.Turma>>("api/Turma");
+        listAlunos = await _httpService.HttpGet<List<Domain.Entities.Aluno>>("api/Aluno");
+    }
+
+    private async Task UpdateAlunoTurma()
+    {
+        alunoTurma.alunoId = alunoSelecionado;
+        alunoTurma.alunoIdOld = Convert.ToInt32(alunoId);
+        alunoTurma.turmaId = turmaSelecionado;
+        alunoTurma.turmaIdOld = Convert.ToInt32(turmaId);
+        await _httpService.HttpPut<Domain.Entities.AlunoTurmaUpdate>($"api/AlunoTurma/", alunoTurma);
+
+        NavigationManager.NavigateTo("/listAlunoTurma", true);
+    }
+}

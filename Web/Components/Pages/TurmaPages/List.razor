@@ -1,0 +1,70 @@
+﻿@page "/listTurma"
+@using Web.Services
+@inject HttpService _httpService
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Listagem de Turmas</PageTitle>
+
+@if (listTurmas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <h2>Lista de Turmas</h2>
+        <div class="text-right mb-2">
+            <button class="btn btn-primary" @onclick="() => CriarTurma()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Adicionar Turma
+            </button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Ano</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turma in listTurmas)
+                {
+                    <tr>
+                        <td>@turma.Nome</td>
+                        <td>@turma.Ano</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => EditarTurma(turma.Id)">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                Editar
+                            </button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+
+    private IEnumerable<Domain.Entities.Turma>? listTurmas;
+
+    protected override async Task OnInitializedAsync()
+    
+    {
+        listTurmas = await _httpService.HttpGet<List<Domain.Entities.Turma>>("api/Turma");
+    }
+
+    private void EditarTurma(int turma)
+    {
+        NavigationManager.NavigateTo($"/turmas/edit/?id={turma}");
+    }
+
+    private void CriarTurma()
+    {
+        NavigationManager.NavigateTo($"/turmas/create");
+    }
+}

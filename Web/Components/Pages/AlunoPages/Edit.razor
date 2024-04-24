@@ -1,0 +1,71 @@
+﻿@page "/Alunos/edit"
+@using Domain.Entities
+@inject NavigationManager NavigationManager
+@using Web.Services
+@inject HttpService _httpService
+@rendermode InteractiveServer
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Aluno</h4>
+<hr />
+@if (Aluno is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm method="post" Model="@Aluno" FormName="edit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <input type="hidden" name="Aluno.Id" value="@Aluno.Id" />
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <InputText id="nome" @bind-Value="Aluno.Nome" class="form-control" />
+            <ValidationMessage For="() => Aluno.Nome" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="usuario" class="form-label">Usuario:</label>
+            <InputText id="usuario" @bind-Value="Aluno.Usuario" class="form-control" />
+            <ValidationMessage For="() => Aluno.Usuario" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="senha" class="form-label">senha:</label>
+            <InputText id="senha" @bind-Value="Aluno.senha" class="form-control" />
+            <ValidationMessage For="() => Aluno.senha" class="text-danger" />
+        </div>
+    </EditForm>
+    <button type="button" class="btn btn-primary" @onclick="UpdateAluno">Salvar</button>
+}
+
+<div>
+    <a href="/alunos">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Domain.Entities.Aluno? Aluno { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Aluno = await _httpService.HttpGet<Domain.Entities.Aluno>($"api/Aluno/{Id}");
+
+        if (Aluno is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task UpdateAluno()
+    {
+        await _httpService.HttpPut<Domain.Entities.Aluno>($"api/Aluno", Id, Aluno);
+
+        NavigationManager.NavigateTo("/", true);
+
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/"
+@using Web.Services
+@inject HttpService _httpService
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Listagem de Alunos</PageTitle>
+
+@if (listAlunos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <h2>Lista de Alunos</h2>
+        <div class="text-right mb-2">
+            <button class="btn btn-primary" @onclick="() => CriarAluno()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Adicionar Aluno
+            </button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Usuário</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var aluno in listAlunos)
+                {
+                    <tr>
+                        <td>@aluno.Nome</td>
+                        <td>@aluno.Usuario</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => EditarAluno(aluno.Id)">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                Editar
+                            </button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+
+    private IEnumerable<Domain.Entities.Aluno>? listAlunos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listAlunos = await _httpService.HttpGet<List<Domain.Entities.Aluno>>("api/Aluno");
+    }
+
+    private void EditarAluno(int aluno)
+    {
+        NavigationManager.NavigateTo($"/Alunos/edit/?id={aluno}");
+    }
+
+    private void CriarAluno()
+    {
+        NavigationManager.NavigateTo($"/alunos/create");
+    }
+}

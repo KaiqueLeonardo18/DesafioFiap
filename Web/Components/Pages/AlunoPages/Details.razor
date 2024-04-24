@@ -1,0 +1,48 @@
+﻿@page "/alunos/details"
+@using Domain.Entities
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Aluno</h4>
+    <hr />
+    @if (aluno is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@aluno.Nome</dd>
+            <dt class="col-sm-2">Usuario</dt>
+            <dd class="col-sm-10">@aluno.Usuario</dd>
+            <dt class="col-sm-2">senha</dt>
+            <dd class="col-sm-10">@aluno.senha</dd>
+        </dl>
+        <div>
+            <a href="@($"/alunos/edit?id={aluno.Id}")">Edit</a> |
+            <a href="@($"/alunos")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Domain.Entities.Aluno? aluno;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // aluno = await DB.Aluno.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (aluno is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
