@@ -74,7 +74,7 @@ else
     [Parameter]
     public string ativo { get; set; }
 
-    private Domain.Entities.AlunoTurmaUpdate? alunoTurma = new();
+    private Domain.Entities.AlunoTurmaUpdate alunoTurma = new();
 
     protected override async Task OnInitializedAsync()
     {
