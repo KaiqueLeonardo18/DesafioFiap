@@ -25,6 +25,7 @@ else
                 <tr>
                     <th>Nome</th>
                     <th>Ano</th>
+                    <th>Situação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -34,12 +35,19 @@ else
                     <tr>
                         <td>@turma.Nome</td>
                         <td>@turma.Ano</td>
+                        @if (Convert.ToBoolean(@turma.Ativo))
+                        {
+                            <td>Ativo</td>
+                        }
+                        else
+                        {
+                            <td>Inativo</td>
+                        }
                         <td>
                             <button class="btn btn-primary" @onclick="() => EditarTurma(turma.Id)">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                                 Editar
                             </button>
-                            <button class="btn btn-danger">Excluir</button>
                         </td>
                     </tr>
                 }

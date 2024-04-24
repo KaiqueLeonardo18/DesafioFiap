@@ -25,7 +25,7 @@ namespace Application.UseCases.AlunoTurmas.Update
         public async Task<UpdateAlunoTurmaResponse> Handle(UpdateAlunoTurmaRequest command,
                                       CancellationToken cancellationToken)
         {
-            await _alunoTurmaRepository.Update(command.alunoId, command.turmaId, command.alunoIdOld, command.turmaIdOld);
+            await _alunoTurmaRepository.Update(command.alunoId, command.turmaId, command.alunoIdOld, command.turmaIdOld, command.ativo);
 
             var alunoTurma = await _alunoTurmaRepository.GetById(command.alunoId, command.turmaId);
 

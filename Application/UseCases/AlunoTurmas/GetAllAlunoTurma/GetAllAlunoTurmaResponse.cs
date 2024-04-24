@@ -14,5 +14,6 @@ namespace Application.UseCases.AlunoTurmas.GetAllAlunoTurma
         public int AnoTurma { get; set; }
         public int AlunoId { get; set; }
         public int TurmaId { get; set; }
+        public bool Ativo { get; set; }
     }
 }

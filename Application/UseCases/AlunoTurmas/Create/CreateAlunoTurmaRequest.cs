@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.AlunoTurmas.Create
 {
-    public sealed record CreateAlunoTurmaRequest(int alunoId, int turmaId) : IRequest<CreateAlunoTurmaResponse>;
+    public sealed record CreateAlunoTurmaRequest(int alunoId, int turmaId, bool ativo) : IRequest<CreateAlunoTurmaResponse>;
 
 }

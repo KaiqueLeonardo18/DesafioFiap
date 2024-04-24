@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text;
+using Web.Models;
+using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Services
 {
@@ -69,7 +72,7 @@ namespace Web.Services
                 {
                     PropertyNameCaseInsensitive = true
                 });
-
+                throw new ApplicationException($"{exception.Error.Details}");
             }
 
             return await FromHttpResponseMessage<T>(result);

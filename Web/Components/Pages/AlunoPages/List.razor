@@ -25,6 +25,7 @@ else
                 <tr>
                     <th>Nome</th>
                     <th>Usuário</th>
+                    <th>Situação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -34,12 +35,19 @@ else
                     <tr>
                         <td>@aluno.Nome</td>
                         <td>@aluno.Usuario</td>
+                        @if (Convert.ToBoolean(@aluno.Ativo))
+                        {
+                            <td>Ativo</td>
+                        }
+                        else
+                        {
+                            <td>Inativo</td>
+                        }
                         <td>
                             <button class="btn btn-primary" @onclick="() => EditarAluno(aluno.Id)">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
-                                Editar
+                                Editar/Ativar
                             </button>
-                            <button class="btn btn-danger">Excluir</button>
                         </td>
                     </tr>
                 }

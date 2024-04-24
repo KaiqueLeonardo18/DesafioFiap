@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Listagem de Vinculos Alunos e Turmas</PageTitle>
+<PageTitle>Relação de Alunos e Turmas</PageTitle>
 
 @if (listAlunosTurmas == null)
 {
@@ -14,7 +14,7 @@
 else
 {
     <div class="container">
-        <h2>Vinculos de Alunos e Turmas</h2>
+        <h2>Relação de Alunos e Turmas</h2>
         <div class="text-right mb-2">
             <button class="btn btn-primary" @onclick="() => CriarVinculoAlunoTurma()">
                 <i class="fa fa-plus" aria-hidden="true"></i> Adicionar Vinculo
@@ -27,6 +27,7 @@ else
                     <th>Usuário do Aluno</th>
                     <th>Turma</th>
                     <th>Ano da Turma</th>
+                    <th>Situação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -38,8 +39,16 @@ else
                         <td>@alunoTurma.UsuarioAluno</td>
                         <td>@alunoTurma.NomeTurma</td>
                         <td>@alunoTurma.AnoTurma</td>
+                        @if (Convert.ToBoolean(@alunoTurma.Ativo))
+                        {
+                            <td>Ativo</td>
+                        }
+                        else
+                        {
+                            <td>Inativo</td>
+                        }
                         <td>
-                            <button class="btn btn-primary" @onclick="() => EditarVinculoAlunoTurma(alunoTurma.AlunoId, alunoTurma.TurmaId)">Editar</button>
+                            <button class="btn btn-primary" @onclick="() => EditarVinculoAlunoTurma(alunoTurma.AlunoId, alunoTurma.TurmaId, alunoTurma.Ativo)">Editar</button>
                         </td>
                     </tr>
                 }
@@ -57,9 +66,18 @@ else
         listAlunosTurmas = await _httpService.HttpGet<List<Domain.Entities.AlunoTurmaInfo>>("api/AlunoTurma");
     }
 
-    private void EditarVinculoAlunoTurma(int turma, int aluno)
+    private void EditarVinculoAlunoTurma(int aluno, int turma, bool ativo)
     {
-        NavigationManager.NavigateTo($"/alunoTurma/edit/{aluno}/{turma}");
+        int situacao;
+        if (ativo)
+        {
+            situacao = 1;
+        }
+        else
+        {
+            situacao = 0;
+        }
+        NavigationManager.NavigateTo($"/alunoTurma/edit/{aluno}/{turma}/{situacao}");
     }
 
     private void CriarVinculoAlunoTurma()

@@ -5,6 +5,7 @@ using Application.UseCases.AlunoTurmas.Update;
 using Application.UseCases.Turmas.Create;
 using Application.UseCases.Turmas.GetById;
 using Application.UseCases.Turmas.Update;
+using Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +24,16 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateAlunoTurmaResponse>> Create(CreateAlunoTurmaRequest request, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(request, cancellationToken);
-            return Ok(response);
+            try
+            {
+                var response = await _mediator.Send(request, cancellationToken);
+
+                return Ok(response);
+            }
+            catch (AlunoTurmaException ex)
+            {
+                return StatusCode(500, new { error = new { message = "Erro interno no servidor", code = 500, details = ex.Message } });
+            }
         }
 
         [HttpGet]
@@ -38,7 +47,7 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<UpdateAlunoTurmaResponse>> Update([FromBody] UpdateAlunoTurmaRequest request, CancellationToken cancellationToken)
         {
-            await _mediator.Send(new UpdateAlunoTurmaRequest(request.alunoId, request.turmaId, request.alunoIdOld, request.turmaIdOld), cancellationToken);
+            await _mediator.Send(new UpdateAlunoTurmaRequest(request.alunoId, request.turmaId, request.alunoIdOld, request.turmaIdOld, request.ativo), cancellationToken);
 
             return NoContent();
         }

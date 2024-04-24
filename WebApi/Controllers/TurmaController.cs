@@ -19,7 +19,6 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateTurmaResponse>> Create(CreateTurmaRequest request, CancellationToken cancellationToken)
         {
             try
@@ -27,7 +26,7 @@ namespace WebApi.Controllers
                 var response = await _mediator.Send(request, cancellationToken);
                 return Ok(response);
             }
-            catch (TurmaExcepetion ex)
+            catch (TurmaException ex)
             {
                 return StatusCode(500, new { error = new { message = "Erro interno no servidor", code = 500, details = ex.Message } });
             }
@@ -56,7 +55,7 @@ namespace WebApi.Controllers
 
             if (Turma == null) return NotFound();
 
-            await _mediator.Send(new UpdateTurmaRequest(id, request.nome, request.ano), cancellationToken);
+            await _mediator.Send(new UpdateTurmaRequest(id, request.nome, request.ano, request.ativo), cancellationToken);
 
             return NoContent();
         }

@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace Application.UseCases.Alunos.Update
 {
     public sealed record UpdateAlunoRequest(int Id,
-                      string nome, string usuario, string senha)
+                      string nome, string usuario, string senha, bool ativo)
                       : IRequest<UpdateAlunoResponse>;
 }

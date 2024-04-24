@@ -30,6 +30,7 @@ namespace Application.UseCases.Alunos.Update
             aluno.Nome = command.nome;
             aluno.Usuario = command.usuario;
             aluno.senha = command.senha;
+            aluno.Ativo = command.ativo;
 
             _alunoRepository.Update(aluno);
 

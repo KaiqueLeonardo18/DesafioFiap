@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Domain.Exceptions
 {
-    public class TurmaExcepetion : Exception
+    public class AlunoTurmaException : Exception
     {
-        public TurmaExcepetion()
+        public AlunoTurmaException()
         {
             
         }
 
-        public TurmaExcepetion(string message) : base(message)
+        public AlunoTurmaException(string message) : base(message)
         {
             
         }
 
-        public TurmaExcepetion(string message, Exception innerException) : base(message, innerException)
+        public AlunoTurmaException(string message, Exception innerException) : base(message, innerException)
         {
             
         }

@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.Alunos.Create;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using MediatR;
 using System;
@@ -25,6 +26,11 @@ namespace Application.UseCases.AlunoTurmas.Create
         public async Task<CreateAlunoTurmaResponse> Handle(CreateAlunoTurmaRequest request, CancellationToken cancellationToken)
         {
             var alunoTurma = _mapper.Map<AlunoTurma>(request);
+
+            if (await _alunoTurmaRepository.VerificarSeExisteAlunoTurmaVinculo(request.alunoId, request.turmaId))
+            {
+                throw new AlunoTurmaException("Já existe um vinculo deste aluno com essa turma");
+            }
 
             _alunoTurmaRepository.Create(alunoTurma);
 

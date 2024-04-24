@@ -8,9 +8,10 @@ namespace Domain.Entities
 {
     public class AlunoTurmaUpdate
     {
-        public int alunoId { get; set; }
-        public int turmaId { get; set; }
-        public int alunoIdOld { get; set; }
-        public int turmaIdOld { get; set; }
+        public int AlunoId { get; set; }
+        public int TurmaId { get; set; }
+        public int AlunoIdOld { get; set; }
+        public int TurmaIdOld { get; set; }
+        public bool Ativo { get; set; }
     }
 }

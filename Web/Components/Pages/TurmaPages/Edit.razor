@@ -31,6 +31,18 @@ else
             <InputNumber id="ano" @bind-Value="turma.Ano" class="form-control" />
             <ValidationMessage For="() => turma.Ano" class="text-danger" />
         </div>
+        <div class="mb-3">
+            @if (turma.Ativo)
+            {
+                <label for="senha" class="form-label">Ativo</label>
+                <InputCheckbox @bind-Value="turma.Ativo" />
+            }
+            else
+            {
+                <label for="senha" class="form-label">Inativo</label>
+                <InputCheckbox @bind-Value="turma.Ativo" />
+            }
+        </div>
     </EditForm>
     <button type="button" class="btn btn-primary" @onclick="UpdateTurma">Salvar</button>
 }

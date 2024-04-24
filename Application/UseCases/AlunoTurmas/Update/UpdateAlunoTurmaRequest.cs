@@ -10,6 +10,6 @@ using System.Threading.Tasks;
 namespace Application.UseCases.AlunoTurmas.Update
 {
     public sealed record UpdateAlunoTurmaRequest(int alunoId,
-                  int turmaId, int alunoIdOld, int turmaIdOld)
+                  int turmaId, int alunoIdOld, int turmaIdOld, bool ativo)
                   : IRequest<UpdateAlunoTurmaResponse>;
 }

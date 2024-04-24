@@ -28,24 +28,23 @@ namespace Persistence.Repositories
             using (var conn = _connectionFactory.CreateConnection())
             {
                 var sql = @"
-                SELECT a.Nome AS NomeAluno, a.Usuario AS UsuarioAluno, t.Nome AS NomeTurma, t.Ano AS AnoTurma, at.alunoId, at.turmaId
+                SELECT a.Nome AS NomeAluno, a.Usuario AS UsuarioAluno, t.Nome AS NomeTurma, t.Ano AS AnoTurma, at.AlunoId, at.TurmaId, at.Ativo AS Ativo
                     FROM Aluno_Turma at
                 JOIN Aluno a ON at.AlunoId = a.ID
                 JOIN Turma t ON at.TurmaId = t.ID";
-
                 return conn.Query<AlunoTurmaInfo>(sql).AsList();
             }
         }
 
-        public async Task Update(int newAlunoId, int newTurmaId, int alunoId, int turmaId)
+        public async Task Update(int newAlunoId, int newTurmaId, int alunoId, int turmaId, bool ativo)
         {
             using (var conn = _connectionFactory.CreateConnection())
             {
                 string sql = @"UPDATE Aluno_Turma
-                      SET AlunoId = @NewAlunoId, TurmaId = @NewTurmaId
+                      SET AlunoId = @NewAlunoId, TurmaId = @NewTurmaId, Ativo = @Ativo
                       WHERE AlunoId = @AlunoId AND TurmaId = @TurmaId";
 
-                await conn.ExecuteAsync(sql, new { NewAlunoId = newAlunoId, NewTurmaId = newTurmaId, AlunoId = alunoId, TurmaId = turmaId });
+               await conn.ExecuteAsync(sql, new { NewAlunoId = newAlunoId, NewTurmaId = newTurmaId, AlunoId = alunoId, TurmaId = turmaId, Ativo = Convert.ToInt32(ativo) });
             }
         }
 
@@ -55,6 +54,17 @@ namespace Persistence.Repositories
             using (var conn = _connectionFactory.CreateConnection())
             {
                 return await conn.QueryFirstOrDefaultAsync<AlunoTurma>(query, new { AlunoId = alunoId, TurmaId = turmaId });
+            }
+        }
+
+        public async Task<bool> VerificarSeExisteAlunoTurmaVinculo(int alunoId, int turmaId)
+        {
+            using (var conn = _connectionFactory.CreateConnection())
+            {
+                var query = "SELECT COUNT(*) FROM [Aluno_Turma] WHERE AlunoId = @alunoId AND TurmaId = @turmaId";
+                var count = await conn.ExecuteScalarAsync<int>(query, new { AlunoId = alunoId, TurmaId = turmaId });
+
+                return count > 0;
             }
         }
     }

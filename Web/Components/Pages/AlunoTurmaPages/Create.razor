@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject HttpService _httpService
 @rendermode InteractiveServer
+@inject IJSRuntime JS
 
 <PageTitle>Create</PageTitle>
 
@@ -15,6 +16,7 @@ else
 {
     <div class="row">
         <div class="col-md-4">
+            <div class="alert alert-danger" role="alert" id="lblError" style="display: none"></div>
             <label for="nome" class="form-label">Aluno:</label>
             <select class="form-select" aria-label="Default select example" @bind="@alunoSelecionado">
                 <option selected>Open this select menu</option>
@@ -36,7 +38,7 @@ else
     </div>
 
     <div>
-        <a href="/alunos">Back to List</a>
+        <a href="/listAlunoTurma">Back to List</a>
     </div>
 }
 @code {
@@ -47,6 +49,8 @@ else
     private int alunoSelecionado;
     private int turmaSelecionado;
 
+    private string? errorMessage;
+
     protected override async Task OnInitializedAsync()
     {
         listTurmas = await _httpService.HttpGet<List<Domain.Entities.Turma>>("api/Turma");
@@ -55,13 +59,26 @@ else
 
     public async Task AddAlunoTurma()
     {
-        var alunoTurma = new AlunoTurma()
+        try
         {
-            AlunoId = alunoSelecionado,
-            TurmaId = turmaSelecionado
-        };
-        await _httpService.HttpPost<Domain.Entities.AlunoTurma>($"api/AlunoTurma", alunoTurma);
+            var alunoTurma = new AlunoTurma()
+                {
+                    AlunoId = alunoSelecionado,
+                    TurmaId = turmaSelecionado
+                };
+            await _httpService.HttpPost<Domain.Entities.AlunoTurma>($"api/AlunoTurma", alunoTurma);
 
-        NavigationManager.NavigateTo("/listAlunoTurma");
+            NavigationManager.NavigateTo("/listAlunoTurma");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            MostrarErro();
+        }
+    }
+
+    private async Task MostrarErro()
+    {
+        await JS.InvokeVoidAsync("mostrarErro", errorMessage);
     }
 }

@@ -1,9 +1,11 @@
 ﻿@page "/turmas/create"
 @using Domain.Entities
+@using Domain.Exceptions
 @using Web.Services
 @inject NavigationManager NavigationManager
 @inject HttpService _httpService
 @rendermode InteractiveServer
+@inject IJSRuntime JS
 
 <PageTitle>Create</PageTitle>
 
@@ -13,37 +15,51 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <div class="alert alert-danger" role="alert" id="lblError" style="display: none"></div>
         <EditForm method="post" Model="turma" OnValidSubmit="AddTurma" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="nome" class="form-label">Nome:</label> 
+                <label for="nome" class="form-label">Nome:</label>
                 <InputText id="nome" @bind-Value="@turma.Nome" class="form-control" />
                 <ValidationMessage For="() => turma.Nome" class="text-danger" />
-            </div>        
+            </div>
             <div class="mb-3">
-                <label for="ano" class="form-label">Ano:</label> 
+                <label for="ano" class="form-label">Ano:</label>
                 <InputNumber id="ano" @bind-Value="@turma.Ano" class="form-control" />
                 <ValidationMessage For="() => turma.Ano" class="text-danger" />
-            </div>     
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
 
 <div>
-    <a href="/turmas">Back to List</a>
+    <a href="/listTurma">Back to List</a>
 </div>
 
 @code {
-
     [SupplyParameterFromForm]
     public Domain.Entities.Turma turma { get; set; } = new();
+    private string? errorMessage;
 
     public async Task AddTurma()
     {
-        await _httpService.HttpPost<Domain.Entities.Aluno>($"api/Turma", turma);
+        try
+        {
+            var t = await _httpService.HttpPost<Domain.Entities.Turma>($"api/Turma", turma);
+            NavigationManager.NavigateTo("/listTurma");
 
-        NavigationManager.NavigateTo("/listTurma");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            MostrarErro();
+        }
+
+    }
+    private async Task MostrarErro()
+    {
+        await JS.InvokeVoidAsync("mostrarErro", errorMessage);
     }
 }

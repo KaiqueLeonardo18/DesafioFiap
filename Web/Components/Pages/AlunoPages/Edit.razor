@@ -36,12 +36,24 @@ else
             <InputText id="senha" @bind-Value="Aluno.senha" class="form-control" />
             <ValidationMessage For="() => Aluno.senha" class="text-danger" />
         </div>
+        <div class="mb-3">
+            @if (Aluno.Ativo)
+            {
+                <label for="senha" class="form-label">Ativo</label>
+                <InputCheckbox @bind-Value="Aluno.Ativo" />
+            }
+            else
+            {
+                <label for="senha" class="form-label">Inativo</label>
+                <InputCheckbox @bind-Value="Aluno.Ativo" />
+            }
+        </div>
     </EditForm>
     <button type="button" class="btn btn-primary" @onclick="UpdateAluno">Salvar</button>
 }
 
 <div>
-    <a href="/alunos">Back to List</a>
+    <a href="/">Back to List</a>
 </div>
 
 @code {

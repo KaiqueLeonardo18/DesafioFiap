@@ -10,5 +10,6 @@ namespace Application.UseCases.Turmas.Update
     {
         public string Nome { get; set; }
         public int Ano { get; set; }
+        public bool Ativo { get; set; }
     }
 }

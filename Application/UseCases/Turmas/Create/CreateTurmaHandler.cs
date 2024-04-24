@@ -29,7 +29,12 @@ namespace Application.UseCases.Turmas.Create
 
             if(await _TurmaRepository.VerificarSeExisteTurmaComMesmoNome(request.nome))
             {
-                throw new TurmaExcepetion("Já existe uma turma com este nome");
+                throw new TurmaException("Já existe uma turma com este nome");
+            }
+
+            if(request.ano < DateTime.Now.Year)
+            {
+                throw new TurmaException("Não é possível inserir uma Turma com Ano inferior ao atual");
             }
 
             _TurmaRepository.Create(turma);

@@ -1,9 +1,11 @@
 ﻿@page "/alunos/create"
 @using Domain.Entities
+@using System.Text.RegularExpressions
 @using Web.Services
 @inject NavigationManager NavigationManager
 @inject HttpService _httpService
 @rendermode InteractiveServer
+@inject IJSRuntime JS
 
 <PageTitle>Criar aluno</PageTitle>
 
@@ -11,7 +13,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="Aluno" OnValidSubmit="AddAluno" FormName="create" Enhance>
+        <div class="alert alert-danger" role="alert" id="lblError" style="display: none"></div>
+        <EditForm method="post" Model="Aluno" OnValidSubmit="HandleValidSubmit" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
@@ -26,7 +29,8 @@
             </div>        
             <div class="mb-3">
                 <label for="senha" class="form-label">senha:</label> 
-                <InputText id="senha" @bind-Value="@Aluno.senha" class="form-control" /> 
+                <InputText id="senha" type="password" @bind-Value="@Aluno.senha" class="form-control" />
+                @* <InputCheckbox></InputCheckbox> *@
                 <ValidationMessage For="() => Aluno.senha" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
@@ -35,18 +39,45 @@
 </div>
 
 <div>
-    <a href="/alunos">Back to List</a>
+    <a href="/">Back to List</a>
 </div>
 
 @code {
 
     [SupplyParameterFromForm]
     public Domain.Entities.Aluno Aluno { get; set; } = new();
+    private string? errorMessage;
 
     public async Task AddAluno()
     {
         await _httpService.HttpPost<Domain.Entities.Aluno>($"api/Aluno", Aluno);
 
         NavigationManager.NavigateTo("/");
+    }
+
+    private bool IsPasswordStrong(string password)
+    {
+        return !string.IsNullOrWhiteSpace(password) &&
+               password.Length >= 8 &&
+               Regex.IsMatch(password, @"\d") &&
+               Regex.IsMatch(password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+    }
+
+    private void HandleValidSubmit()
+    {
+        if (IsPasswordStrong(Aluno.senha))
+        {
+            AddAluno();
+        }
+        else
+        {
+            errorMessage = "A senha deve conter letras, numero, caracterer especial e ser maior que 8 caracateres!";
+            MostrarErro();
+        }
+    }
+
+    private async Task MostrarErro()
+    {
+        await JS.InvokeVoidAsync("mostrarErro", errorMessage);
     }
 }

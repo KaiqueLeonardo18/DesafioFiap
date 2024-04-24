@@ -9,7 +9,8 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string Nome { get; set; }
         public int Ano { get; set; }
-        [Write(false)]
-        public List<Aluno> Alunos { get; set; }
+        public bool Ativo { get; set; }
+        //[Write(false)]
+        //public List<Aluno> Alunos { get; set; }
     }
 }

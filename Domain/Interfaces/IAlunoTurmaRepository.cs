@@ -10,7 +10,8 @@ namespace Domain.Interfaces
     public interface IAlunoTurmaRepository : IBaseRepository<AlunoTurma>
     {
         Task<List<AlunoTurmaInfo>> GetAlunoTurma();
-        Task Update(int newAlunoId, int newTurmaId, int alunoId, int turmaId);
+        Task Update(int newAlunoId, int newTurmaId, int alunoId, int turmaId, bool ativo);
         Task<AlunoTurma> GetById(int alunoId, int turmaId);
+        Task<bool> VerificarSeExisteAlunoTurmaVinculo(int alunoId, int turmaId);
     }
 }

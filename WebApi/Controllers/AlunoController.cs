@@ -49,7 +49,7 @@ namespace WebApi.Controllers
 
             if(aluno == null) return NotFound();
 
-            await _mediator.Send(new UpdateAlunoRequest(id, request.nome, request.usuario, request.senha), cancellationToken);
+            await _mediator.Send(new UpdateAlunoRequest(id, request.nome, request.usuario, request.senha, request.ativo), cancellationToken);
 
             return NoContent();
         }

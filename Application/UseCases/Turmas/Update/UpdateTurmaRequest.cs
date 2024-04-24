@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 namespace Application.UseCases.Turmas.Update
 {
     public sealed record UpdateTurmaRequest(int Id,
-                      string nome, int ano)
+                      string nome, int ano, bool ativo)
                       : IRequest<UpdateTurmaResponse>;
 }
