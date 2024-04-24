@@ -9,7 +9,26 @@
 
 @if (listAlunosTurmas == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="container">
+        <h2>Relação de Alunos e Turmas</h2>
+        <div class="text-right mb-2">
+            <button class="btn btn-primary" @onclick="() => CriarVinculoAlunoTurma()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Adicionar Vinculo
+            </button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome do Aluno</th>
+                    <th>Usuário do Aluno</th>
+                    <th>Turma</th>
+                    <th>Ano da Turma</th>
+                    <th>Situação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 }
 else
 {
@@ -48,7 +67,7 @@ else
                             <td>Inativo</td>
                         }
                         <td>
-                            <button class="btn btn-primary" @onclick="() => EditarVinculoAlunoTurma(alunoTurma.AlunoId, alunoTurma.TurmaId, alunoTurma.Ativo)">Editar</button>
+                            <button class="btn btn-primary" @onclick="() => EditarVinculoAlunoTurma(alunoTurma.AlunoId, alunoTurma.TurmaId, alunoTurma.Ativo)">Editar/Ativar</button>
                         </td>
                     </tr>
                 }

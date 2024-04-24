@@ -26,7 +26,7 @@ namespace Application.UseCases.Turmas.Create
         public async Task<CreateTurmaResponse> Handle(CreateTurmaRequest request, CancellationToken cancellationToken)
         {
             var turma = _mapper.Map<Turma>(request);
-
+            turma.Ativo = true;
             if(await _TurmaRepository.VerificarSeExisteTurmaComMesmoNome(request.nome))
             {
                 throw new TurmaException("Já existe uma turma com este nome");

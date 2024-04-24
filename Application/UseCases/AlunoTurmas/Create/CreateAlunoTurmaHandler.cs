@@ -26,6 +26,7 @@ namespace Application.UseCases.AlunoTurmas.Create
         public async Task<CreateAlunoTurmaResponse> Handle(CreateAlunoTurmaRequest request, CancellationToken cancellationToken)
         {
             var alunoTurma = _mapper.Map<AlunoTurma>(request);
+            alunoTurma.Ativo = true;
 
             if (await _alunoTurmaRepository.VerificarSeExisteAlunoTurmaVinculo(request.alunoId, request.turmaId))
             {

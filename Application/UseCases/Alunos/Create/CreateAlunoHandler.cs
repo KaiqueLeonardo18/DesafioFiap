@@ -20,6 +20,7 @@ namespace Application.UseCases.Alunos.Create
         {
             var aluno = _mapper.Map<Aluno>(request);
 
+            aluno.Ativo = true;
             aluno.senha = Hash.MontarHash(request.senha);
 
             _alunoRepository.Create(aluno);

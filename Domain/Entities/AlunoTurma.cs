@@ -10,5 +10,6 @@ namespace Domain.Entities
         public int AlunoId { get; set; }
         [Key]
         public int TurmaId { get; set; }
+        public bool Ativo { get; set; }
     }
 }

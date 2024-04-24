@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Turmas.Create
 {
-    public sealed record CreateTurmaRequest(string nome, int ano) : IRequest<CreateTurmaResponse>;
+    public sealed record CreateTurmaRequest(string nome, int ano, bool ativo) : IRequest<CreateTurmaResponse>;
 }

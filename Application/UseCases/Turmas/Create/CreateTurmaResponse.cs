@@ -10,5 +10,6 @@ namespace Application.UseCases.Turmas.Create
     {
         public string Nome { get; set; }
         public int Ano { get; set; }
+        public bool Ativo { get; set; }
     }
 }
