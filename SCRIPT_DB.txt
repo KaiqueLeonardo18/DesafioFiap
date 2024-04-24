@@ -1,0 +1,40 @@
+USE master;
+GO
+
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'Escola')
+BEGIN
+    CREATE DATABASE Escola;
+END
+GO
+
+-- Usar o banco de dados Escola
+USE Escola;
+GO
+
+-- Criar a tabela Aluno
+CREATE TABLE Aluno (
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    Nome NVARCHAR(100),
+    Usuario NVARCHAR(50),
+    SENHA NVARCHAR(50),
+    ATIVO BIT
+);
+
+-- Criar a tabela Turma
+CREATE TABLE Turma (
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    Nome NVARCHAR(100),
+    Ano INT,
+    ATIVO BIT
+);
+
+-- Criar a tabela de relacionamento Aluno_Turma
+CREATE TABLE Aluno_Turma (
+    AlunoID INT,
+    TurmaID INT,
+    ATIVO BIT,
+    CONSTRAINT FK_AlunoID FOREIGN KEY (AlunoID) REFERENCES Aluno(ID),
+    CONSTRAINT FK_TurmaID FOREIGN KEY (TurmaID) REFERENCES Turma(ID),
+    CONSTRAINT PK_Aluno_Turma PRIMARY KEY (AlunoID, TurmaID)
+);
+
